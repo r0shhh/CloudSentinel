@@ -66,6 +66,36 @@ def check_public_access_block(bucket_name):
                 'issues': [f'Unexpected error: {error_code}']
             }
         
+def check_bucket_encryption(bucket_name):
+    """
+    Check if bucket encryption is enabled.
+    Returns a finding if encryption is not configured.
+    """
+    s3_client = boto3.client('s3')
+
+    try:
+        response = s3_client.get_bucket_encryption(Bucket=bucket_name)
+        return {
+            'bucket': bucket_name,
+            'status': 'PASS',
+            'issues': []
+        }
+
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+
+        if error_code == 'ServerSideEncryptionConfigurationNotFoundError':
+            return {
+                'bucket': bucket_name,
+                'status': 'FAIL',
+                'issues': ['Bucket encryption is not configured']
+            }
+        else:
+            return {
+                'bucket': bucket_name,
+                'status': 'ERROR',
+                'issues': [f'Unexpected error: {error_code}']
+            }
 
 if __name__ == "__main__":
     buckets = list_buckets()
@@ -77,7 +107,10 @@ if __name__ == "__main__":
         for bucket in buckets:
             result = check_public_access_block(bucket['Name'])
             print(f"Bucket: {result['bucket']}")
-            print(f"Status: {result['status']}")
+            print(f"[Public Access Block] {result['status']}")
+
+            result = check_bucket_encryption(bucket['Name'])
+            print(f"[Encryption] {result['status']}")
             if result['issues']:
                 for issue in result['issues']:
                     print(f" ! {issue}")
