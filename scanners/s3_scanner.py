@@ -96,7 +96,7 @@ def check_bucket_encryption(bucket_name):
                 'status': 'ERROR',
                 'issues': [f'Unexpected error: {error_code}']
             }
-
+"""
 if __name__ == "__main__":
     buckets = list_buckets()
 
@@ -116,4 +116,4 @@ if __name__ == "__main__":
                     print(f" ! {issue}")
             print() 
 
-        
+        """
