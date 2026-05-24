@@ -96,24 +96,3 @@ def check_bucket_encryption(bucket_name):
                 'status': 'ERROR',
                 'issues': [f'Unexpected error: {error_code}']
             }
-"""
-if __name__ == "__main__":
-    buckets = list_buckets()
-
-    if not buckets:
-        print ("No S3 buckets found in the account.")
-    else:
-        print(f"Scanning {len(buckets)} bucket(s)... \n")
-        for bucket in buckets:
-            result = check_public_access_block(bucket['Name'])
-            print(f"Bucket: {result['bucket']}")
-            print(f"[Public Access Block] {result['status']}")
-
-            result = check_bucket_encryption(bucket['Name'])
-            print(f"[Encryption] {result['status']}")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f" ! {issue}")
-            print() 
-
-        """
