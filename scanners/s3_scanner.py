@@ -53,7 +53,7 @@ def check_public_access_block(bucket_name):
     except ClientError as e:
         error_code = e.response['Error']['Code']
 
-        if error_code == 'NoSuckPublicAccessBlockConfiguration':
+        if error_code == 'NoSuchPublicAccessBlockConfiguration':
             return {
                 'bucket': bucket_name,
                 'status': 'FAIL',
@@ -96,3 +96,4 @@ def check_bucket_encryption(bucket_name):
                 'status': 'ERROR',
                 'issues': [f'Unexpected error: {error_code}']
             }
+        
