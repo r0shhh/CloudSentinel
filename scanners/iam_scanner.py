@@ -121,32 +121,3 @@ def check_admin_privileges(username):
 
         }            
 
-
-
-if __name__ == "__main__":
-    users = list_iam_users()
-
-    if not users:
-        print("No IAM users found.")
-    else:
-        print(f"Found {len(users)} user(s):")
-        for user in users:
-            print (f" - {user['UserName']}")
-            
-            result = check_user_mfa(user['UserName'])
-            print(f"[MFA] {result['status']} ")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")
-
-            result = check_access_key_age(user['UserName'])
-            print(f"[Access Key Age] {result['status']}")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")
-
-            result = check_admin_privileges(user['UserName'])
-            print(f"[Admin Privilages] {result['status']}")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")        
