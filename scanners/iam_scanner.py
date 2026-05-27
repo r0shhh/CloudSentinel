@@ -85,6 +85,41 @@ def check_access_key_age(username):
             'status' : 'ERROR',
             'issues' : [f'Unexpected error: {error_code}']
         }
+    
+def check_admin_privileges(username):
+    """
+    Check if the given IAM user has administrative privileges
+    returns a finding if the user has admin access
+    """
+    iam_client = boto3.client('iam')
+    try:
+        response = iam_client.list_attached_user_policies(UserName=username)
+        policies = response['AttachedPolicies']
+        issues = []
+
+        for policy in policies:
+            if policy['PolicyArn'] == 'arn:aws:iam::aws:policy/AdministratorAccess':
+                issues.append('User has Admin Privileges')
+            if issues: 
+                return {
+                    'user' : username,
+                    'status' : 'FAIL',
+                    'issues' : issues
+                }
+            else:
+                return {
+                    'user' : username,
+                    'status' : 'PASS',
+                    'issues' : []
+                }
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+        return {
+            'user' : username,
+            'status' : 'ERROR',
+            'issues' : [f"Unexpected error: {error_code}"]
+
+        }            
 
 
 
@@ -102,10 +137,16 @@ if __name__ == "__main__":
             print(f"[MFA] {result['status']} ")
             if result['issues']:
                 for issue in result['issues']:
-                    print(f" ! {issue}")
+                    print(f"! {issue}")
 
             result = check_access_key_age(user['UserName'])
             print(f"[Access Key Age] {result['status']}")
             if result['issues']:
                 for issue in result['issues']:
-                    print(f"  ! {issue}")
+                    print(f"! {issue}")
+
+            result = check_admin_privileges(user['UserName'])
+            print(f"[Admin Privilages] {result['status']}")
+            if result['issues']:
+                for issue in result['issues']:
+                    print(f"! {issue}")        
