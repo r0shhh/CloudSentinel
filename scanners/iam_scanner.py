@@ -19,6 +19,23 @@ def check_user_mfa(username):
     Returns a finding if MFA is not enabled.
     """
     iam_client = boto3.client('iam')
+
+    try:
+        iam_client.get_login_profile(UserName=username)
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchEntityException':
+            return {
+                'user': username,
+                'status': 'PASS',
+                'issues': [],
+            }
+        else:
+            return {
+                'user': username,
+                'status': 'ERROR',
+                'issues': [f'Unexpected error checking login profile']
+            }
+    
     try:
         response = iam_client.list_mfa_devices(UserName=username)
         mfa_devices = response['MFADevices']
