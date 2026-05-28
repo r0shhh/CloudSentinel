@@ -1,7 +1,8 @@
 from scanners.s3_scanner import list_buckets, check_public_access_block, check_bucket_encryption
 from scanners.iam_scanner import list_iam_users, check_user_mfa, check_access_key_age, check_admin_privileges
+from reports.report_generator import ReportGenerator
 
-def run_s3_checks():
+def run_s3_checks(report):
     buckets = list_buckets()
 
     if not buckets:
@@ -14,21 +15,15 @@ def run_s3_checks():
         print(f"Bucket: {name}")
 
         result = check_public_access_block(name)
-        print(f"[Public Access Block] {result['status']}")
-        if result['issues']:
-            for issue in result['issues']:
-                print(f"   ! {issue}")
+        report.add_finding('check_public_access_block', result)
 
         result = check_bucket_encryption(name)
-        print(f"[Encryption] {result['status']}")
-        if result['issues']:
-            for issue in result['issues']:
-                print(f"   ! {issue}")
+        report.add_finding('check_bucket_encryption', result)
 
         print() 
 
 
-def run_iam_checks(): 
+def run_iam_checks(report): 
     users = list_iam_users()
 
     if not users:
@@ -39,23 +34,17 @@ def run_iam_checks():
             print (f"- {user['UserName']}")
             
             result = check_user_mfa(user['UserName'])
-            print(f"[MFA] {result['status']} ")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")
+            report.add_finding('check_user_mfa', result)
 
             result = check_access_key_age(user['UserName'])
-            print(f"[Access Key Age] {result['status']}")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")
+            report.add_finding('check_access_key_age', result)
 
             result = check_admin_privileges(user['UserName'])
-            print(f"[Admin Privileges] {result['status']}")
-            if result['issues']:
-                for issue in result['issues']:
-                    print(f"! {issue}")          
+            report.add_finding('check_admin_privileges', result)       
 
 if __name__ == "__main__":
-    run_s3_checks()                       
-    run_iam_checks()
+    report = ReportGenerator()
+    run_s3_checks(report)                       
+    run_iam_checks(report)
+    report.print_report()
+  
