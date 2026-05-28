@@ -5,4 +5,7 @@ __pycache__/
 *.pyc
 .aws/
 logs/
-reports/
+reports/*.json
+reports/*.csv
+reports/*.txt
+
