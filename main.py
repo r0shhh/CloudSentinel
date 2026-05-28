@@ -47,4 +47,5 @@ if __name__ == "__main__":
     run_s3_checks(report)                       
     run_iam_checks(report)
     report.print_report()
+    report.save_json_report('reports/scan_report.json')
   
