@@ -43,9 +43,21 @@ def run_iam_checks(report):
             report.add_finding('check_admin_privileges', result)       
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='CloudSentinel - AWS Misconfiguration Scanner')
+    parser.add_argument('--service', choices=['s3', 'iam', 'all'], default='all', help='Service to scan')
+    args = parser.parse_args()
+
     report = ReportGenerator()
-    run_s3_checks(report)                       
-    run_iam_checks(report)
+
+    if args.service == 's3' or args.service == 'all':
+        run_s3_checks(report)
+
+    if args.service == 'iam' or args.service == 'all':                           
+        run_iam_checks(report)
+
     report.print_report()
     report.save_json_report('reports/scan_report.json')
+
   
