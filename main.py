@@ -1,6 +1,17 @@
 from scanners.s3_scanner import list_buckets, check_public_access_block, check_bucket_encryption
 from scanners.iam_scanner import list_iam_users, check_user_mfa, check_access_key_age, check_admin_privileges
 from reports.report_generator import ReportGenerator
+import logging
+
+logging.basicConfig(
+    filename='logs/cloudsentinel.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger('cloudsentinel')
+logging.getLogger('botocore').setLevel(logging.WARNING)
+logging.getLogger('boto3').setLevel(logging.WARNING)
 
 def run_s3_checks(report):
     buckets = list_buckets()
@@ -22,6 +33,7 @@ def run_s3_checks(report):
 
         print() 
 
+    logger.info('S3 checks complete')
 
 def run_iam_checks(report): 
     users = list_iam_users()
@@ -40,15 +52,19 @@ def run_iam_checks(report):
             report.add_finding('check_access_key_age', result)
 
             result = check_admin_privileges(user['UserName'])
-            report.add_finding('check_admin_privileges', result)       
+            report.add_finding('check_admin_privileges', result)  
+
+    logger.info('IAM checks complete')
+     
 
 if __name__ == "__main__":
+    
     import argparse
-
+    
     parser = argparse.ArgumentParser(description='CloudSentinel - AWS Misconfiguration Scanner')
     parser.add_argument('--service', choices=['s3', 'iam', 'all'], default='all', help='Service to scan')
     args = parser.parse_args()
-
+    logger.info(f'Scan started - service: {args.service}')
     report = ReportGenerator()
 
     if args.service == 's3' or args.service == 'all':
@@ -59,5 +75,6 @@ if __name__ == "__main__":
 
     report.print_report()
     report.save_json_report('reports/scan_report.json')
+    logger.info('Report saved')
 
   
