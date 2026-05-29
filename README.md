@@ -39,6 +39,7 @@ python3 main.py
 | MFA not enabled for console users | IAM | HIGH |
 | Access key older than 90 days | IAM | MEDIUM |
 | User has admin privileges | IAM | CRITICAL |
+| Port 22/3389/3306/5432 open to 0.0.0.0/0 | EC2 | CRITICAL |
 ## Sample Output
 ```
 Scanning 1 bucket(s)...
@@ -66,4 +67,5 @@ Report saved to reports/scan_report.json
 ```
 
 ## Project Status
-Phase 3 complete - reporting system with severity levels implemented, Adding more checks in Phase 4
+## Project Status
+Phase 4 complete. Core scanner functional across S3, IAM, and EC2.
