@@ -7,6 +7,7 @@ SEVERITY = {
     'check_user_mfa': 'HIGH',
     'check_access_key_age': 'MEDIUM',
     'check_admin_privileges': 'CRITICAL',
+    'check_security_groups': 'CRITICAL',
 }
 
 class ReportGenerator:
@@ -19,7 +20,7 @@ class ReportGenerator:
             self.findings.append({
                 'check': check_name,
                 'severity': SEVERITY.get(check_name, 'UNKNOWN'),
-                'resource': result.get('bucket') or result.get('user'),
+                'resource': result.get('bucket') or result.get('user') or result.get('group_id'),
                 'issues': result['issues']
             })    
 

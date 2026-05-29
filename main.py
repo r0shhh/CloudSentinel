@@ -1,5 +1,6 @@
 from scanners.s3_scanner import list_buckets, check_public_access_block, check_bucket_encryption
 from scanners.iam_scanner import list_iam_users, check_user_mfa, check_access_key_age, check_admin_privileges
+from scanners.ec2_scanner import check_security_groups
 from reports.report_generator import ReportGenerator
 import logging
 
@@ -55,6 +56,15 @@ def run_iam_checks(report):
             report.add_finding('check_admin_privileges', result)  
 
     logger.info('IAM checks complete')
+
+def run_ec2_checks(report):
+    results = check_security_groups()
+    print(f"Scanning {len(results)} security group(s)...\n")
+    for result in results:
+        print(f"Security Group: {result['group_id']} ({result['group_name']})")
+        report.add_finding('check_security_groups', result)
+    print()
+    logger.info('EC2 checks complete')
      
 
 if __name__ == "__main__":
@@ -62,7 +72,7 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description='CloudSentinel - AWS Misconfiguration Scanner')
-    parser.add_argument('--service', choices=['s3', 'iam', 'all'], default='all', help='Service to scan')
+    parser.add_argument('--service', choices=['s3', 'iam', 'ec2', 'all'], default='all', help='Service to scan')
     args = parser.parse_args()
     logger.info(f'Scan started - service: {args.service}')
     report = ReportGenerator()
@@ -72,6 +82,9 @@ if __name__ == "__main__":
 
     if args.service == 'iam' or args.service == 'all':                           
         run_iam_checks(report)
+
+    if args.service == 'ec2' or args.service == 'all':
+        run_ec2_checks(report)
 
     report.print_report()
     report.save_json_report('reports/scan_report.json')
