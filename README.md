@@ -17,6 +17,11 @@ your infrastructure, flagging misconfigurations that could expose your environme
 - IAM user
 - Python 3.8+
 - AWS CLI
+#### IAM policies needed:
+- AmazonS3ReadOnlyAccess
+- IAMReadOnlyAccess
+- AmazonEC2ReadOnlyAccess
+- AWSCloudTrail_ReadOnlyAccess
 
 
 ## Setup
@@ -40,6 +45,8 @@ python3 main.py
 | Access key older than 90 days | IAM | MEDIUM |
 | User has admin privileges | IAM | CRITICAL |
 | Port 22/3389/3306/5432 open to 0.0.0.0/0 | EC2 | CRITICAL |
+| CloudTrail not configured | CloudTrail | CRITICAL |
+| CloudTrail not multi-region | CloudTrail | HIGH |
 ## Sample Output
 ```
 Scanning 1 bucket(s)...
@@ -48,19 +55,17 @@ Bucket: cloudsentinel-test-bucket-rosh
 
 Found 1 user(s):
 - cloudsentinel-scanner
+Scanning 1 security group(s)...
+
+Security Group: sg-0ag922g6f7r2083b7 (default)
+
+Scanning 1 CloudTrail trail(s)...
+
+CloudTrail Trail: No trails found
+
 
 ==================================================
 CLOUDSENTINEL SCAN REPORT
-==================================================
-Scan Time : 2026-05-28T18:24:26.648581
-Total Findings: 0
-
-Severity Breakdown:
- CRITICAL: 0
- HIGH: 0
- MEDIUM: 0
- LOW: 0
- No findings. All checks passed.
 ==================================================
 
 Report saved to reports/scan_report.json
@@ -68,4 +73,4 @@ Report saved to reports/scan_report.json
 
 ## Project Status
 ## Project Status
-Phase 4 complete. Core scanner functional across S3, IAM, and EC2.
+Phase 4 complete. Core scanner functional across S3, IAM, EC2 and CloudTrail
