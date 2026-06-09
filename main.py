@@ -1,6 +1,7 @@
 from scanners.s3_scanner import list_buckets, check_public_access_block, check_bucket_encryption
 from scanners.iam_scanner import list_iam_users, check_user_mfa, check_access_key_age, check_admin_privileges
 from scanners.ec2_scanner import check_security_groups
+from scanners.cloudtrail_scanner import check_cloudtrail
 from reports.report_generator import ReportGenerator
 import logging
 
@@ -66,13 +67,21 @@ def run_ec2_checks(report):
     print()
     logger.info('EC2 checks complete')
      
+def run_cloudtrail_checks(report):
+    results = check_cloudtrail()
+    print(f"Scanning {len(results)} CloudTrail trail(s)...\n")
+    for result in results:
+        print(f"CloudTrail Trail: {result['trail_name']}")
+        report.add_finding('check_cloudtrail', result)
+    print()
+    logger.info('CloudTrail checks complete')     
 
 if __name__ == "__main__":
     
     import argparse
     
     parser = argparse.ArgumentParser(description='CloudSentinel - AWS Misconfiguration Scanner')
-    parser.add_argument('--service', choices=['s3', 'iam', 'ec2', 'all'], default='all', help='Service to scan')
+    parser.add_argument('--service', choices=['s3', 'iam', 'ec2', 'cloudtrail', 'all'], default='all', help='Service to scan')
     args = parser.parse_args()
     logger.info(f'Scan started - service: {args.service}')
     report = ReportGenerator()
@@ -86,6 +95,9 @@ if __name__ == "__main__":
     if args.service == 'ec2' or args.service == 'all':
         run_ec2_checks(report)
 
+    if args.service == 'cloudtrail' or args.service == 'all':
+        run_cloudtrail_checks(report)
+        
     report.print_report()
     report.save_json_report('reports/scan_report.json')
     logger.info('Report saved')
