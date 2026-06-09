@@ -5,7 +5,7 @@ common cloud security issues.
 
 ## What It Does
 Connects to AWS via boto3, runs security checks against 
-your infrastructure, flagging misconfigurations that could expose your environment to risk and creates a report of findings with misconfigurations present and there severity levels
+your infrastructure, flagging misconfigurations that could expose your environment to risk and creates a report of findings with misconfigurations present and their severity levels
 
 ## Tech Stack
 - Python 3
@@ -56,7 +56,7 @@ Found 1 user(s):
 - cloudsentinel-scanner
 Scanning 1 security group(s)...
 
-Security Group: sg-0ag922g6f7r2083b7 (default)
+Security Group: sg-0ac922f6f7e2083a7 (default)
 
 Scanning 1 CloudTrail trail(s)...
 
@@ -65,6 +65,22 @@ CloudTrail Trail: No trails found
 
 ==================================================
 CLOUDSENTINEL SCAN REPORT
+==================================================
+Scan Time : 2026-06-09T16:23:43.488716
+Total Findings: 1
+
+Severity Breakdown:
+ CRITICAL: 1
+ HIGH: 0
+ MEDIUM: 0
+ LOW: 0
+
+Findings:
+--------------------------------------------------
+[CRITICAL] check_cloudtrail
+Resource : No trails found
+! No CloudTrail trails configured - AWS activity is not being logged
+
 ==================================================
 
 Report saved to reports/scan_report.json
