@@ -45,8 +45,7 @@ python3 main.py
 | Access key older than 90 days | IAM | MEDIUM |
 | User has admin privileges | IAM | CRITICAL |
 | Port 22/3389/3306/5432 open to 0.0.0.0/0 | EC2 | CRITICAL |
-| CloudTrail not configured | CloudTrail | CRITICAL |
-| CloudTrail not multi-region | CloudTrail | HIGH |
+| CloudTrail not configured or not logging | CloudTrail | CRITICAL |
 ## Sample Output
 ```
 Scanning 1 bucket(s)...
