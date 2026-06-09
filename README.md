@@ -71,5 +71,4 @@ Report saved to reports/scan_report.json
 ```
 
 ## Project Status
-## Project Status
 Phase 4 complete. Core scanner functional across S3, IAM, EC2 and CloudTrail
