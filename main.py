@@ -3,7 +3,7 @@ from scanners.iam_scanner import list_iam_users, check_user_mfa, check_access_ke
 from scanners.ec2_scanner import check_security_groups
 from scanners.cloudtrail_scanner import check_cloudtrail
 from reports.report_generator import ReportGenerator
-from config.config_loader import get_enabled_checks
+from config.config_loader import load_checks_config
 import logging
 
 logging.basicConfig(
@@ -16,7 +16,7 @@ logger = logging.getLogger('cloudsentinel')
 logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('boto3').setLevel(logging.WARNING)
 
-def run_s3_checks(report):
+def run_s3_checks(report, checks_config):
     buckets = list_buckets()
 
     if not buckets:
@@ -28,23 +28,25 @@ def run_s3_checks(report):
         name = bucket['Name']
         print(f"Bucket: {name}")
 
-        result = check_public_access_block(name)
-        report.add_finding('check_public_access_block',
-        result,
-        checks_config.get('s3_block_public_access', {}).get('severity', 'UNKNOWN')
-        )
+        if checks_config.get('s3_block_public_access', {}).get('enabled', True):
+            result = check_public_access_block(name)
+            report.add_finding('check_public_access_block',
+            result,
+            checks_config.get('s3_block_public_access', {}).get('severity', 'UNKNOWN')
+            )
 
-        result = check_bucket_encryption(name)
-        report.add_finding('check_bucket_encryption', 
-        result,
-        checks_config.get('s3_bucket_encryption', {}).get('severity', 'UNKNOWN')
-        )
+        if checks_config.get('s3_bucket_encryption', {}).get('enabled', True):
+            result = check_bucket_encryption(name)
+            report.add_finding('check_bucket_encryption', 
+            result,
+            checks_config.get('s3_bucket_encryption', {}).get('severity', 'UNKNOWN')
+            )
 
-        print() 
+            print() 
 
     logger.info('S3 checks complete')
 
-def run_iam_checks(report): 
+def run_iam_checks(report, checks_config): 
     users = list_iam_users()
 
     if not users:
@@ -54,55 +56,62 @@ def run_iam_checks(report):
         for user in users:
             print (f"- {user['UserName']}")
             
-            result = check_user_mfa(user['UserName'])
-            report.add_finding('check_user_mfa',
-            result,
-            checks_config.get('iam_user_mfa', {}).get('severity', 'UNKNOWN')
-            )
+            if checks_config.get('iam_user_mfa', {}).get('enabled', True):
+                result = check_user_mfa(user['UserName'])
+                report.add_finding('check_user_mfa',
+                result,
+                checks_config.get('iam_user_mfa', {}).get('severity', 'UNKNOWN')
+                )
 
-            result = check_access_key_age(user['UserName'])
-            report.add_finding('check_access_key_age',
-            result,
-            checks_config.get('iam_access_key_age', {}).get('severity', 'UNKNOWN')
-            )
+            if checks_config.get('iam_access_key_age', {}).get('enabled', True):
+                result = check_access_key_age(user['UserName'])
+                report.add_finding('check_access_key_age',
+                result,
+                checks_config.get('iam_access_key_age', {}).get('severity', 'UNKNOWN')
+                )
 
-            result = check_admin_privileges(user['UserName'])
-            report.add_finding('check_admin_privileges',
-            result,
-            checks_config.get('iam_admin_privileges', {}).get('severity', 'UNKNOWN')
-            )  
+            if checks_config.get('iam_admin_privileges', {}).get('enabled', True):
+                result = check_admin_privileges(user['UserName'])
+                report.add_finding('check_admin_privileges',
+                result,
+                checks_config.get('iam_admin_privileges', {}).get('severity', 'UNKNOWN')
+                )  
 
     logger.info('IAM checks complete')
 
-def run_ec2_checks(report):
-    results = check_security_groups()
-    print(f"Scanning {len(results)} security group(s)...\n")
-    for result in results:
-        print(f"Security Group: {result['group_id']} ({result['group_name']})")
-        report.add_finding('check_security_groups',
-        result,
-        checks_config.get('ec2_security_group_ports', {}).get('severity', 'UNKNOWN')
-        )
+def run_ec2_checks(report, checks_config):
 
-    print()
+    if checks_config.get('ec2_security_group_ports', {}).get('enabled', True):
+        results = check_security_groups()
+        print(f"Scanning {len(results)} security group(s)...\n")
+        for result in results:
+            print(f"Security Group: {result['group_id']} ({result['group_name']})")
+            report.add_finding('check_security_groups',
+            result,
+            checks_config.get('ec2_security_group_ports', {}).get('severity', 'UNKNOWN')
+            )
+
+        print()
     logger.info('EC2 checks complete')
      
-def run_cloudtrail_checks(report):
-    results = check_cloudtrail()
-    print(f"Scanning {len(results)} CloudTrail trail(s)...\n")
-    for result in results:
-        print(f"CloudTrail Trail: {result['trail_name']}")
-        report.add_finding('check_cloudtrail',
-        result,
-        checks_config.get('cloudtrail_logging', {}).get('severity', 'UNKNOWN')
-        )
+def run_cloudtrail_checks(report, checks_config):
 
-    print()
+    if checks_config.get('cloudtrail_logging', {}).get('enabled', True):
+        results = check_cloudtrail()
+        print(f"Scanning {len(results)} CloudTrail trail(s)...\n")
+        for result in results:
+            print(f"CloudTrail Trail: {result['trail_name']}")
+            report.add_finding('check_cloudtrail',
+            result,
+            checks_config.get('cloudtrail_logging', {}).get('severity', 'UNKNOWN')
+            )
+
+        print()
     logger.info('CloudTrail checks complete')     
 
 if __name__ == "__main__":
 
-    checks_config = get_enabled_checks()
+    checks_config = load_checks_config()
     
     import argparse
     
@@ -113,16 +122,16 @@ if __name__ == "__main__":
     report = ReportGenerator()
 
     if args.service == 's3' or args.service == 'all':
-        run_s3_checks(report)
+        run_s3_checks(report, checks_config)
 
     if args.service == 'iam' or args.service == 'all':                           
-        run_iam_checks(report)
+        run_iam_checks(report, checks_config)
 
     if args.service == 'ec2' or args.service == 'all':
-        run_ec2_checks(report)
+        run_ec2_checks(report, checks_config)
 
     if args.service == 'cloudtrail' or args.service == 'all':
-        run_cloudtrail_checks(report)
+        run_cloudtrail_checks(report, checks_config)
         
     report.print_report()
     report.save_json_report('reports/scan_report.json')

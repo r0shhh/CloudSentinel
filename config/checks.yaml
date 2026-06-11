@@ -1,6 +1,9 @@
 # All checks defined in one place
 checks:
   s3_block_public_access:
+    module: scanners.s3_scanner
+    function: check_public_access_block
+    resource_type: s3_bucket
     service: s3
     severity: CRITICAL
     enabled: true
@@ -9,6 +12,9 @@ checks:
   
 
   s3_bucket_encryption:
+    module: scanners.s3_scanner
+    function: check_bucket_encryption
+    resource_type: s3_bucket
     service: s3
     severity: MEDIUM
     enabled: true
@@ -17,6 +23,9 @@ checks:
   
 
   iam_user_mfa:
+    module: scanners.iam_scanner
+    function: check_user_mfa
+    resource_type: iam_user
     service: iam
     severity: HIGH
     enabled: true
@@ -25,6 +34,9 @@ checks:
   
 
   iam_access_key_age:
+    module: scanners.iam_scanner
+    function: check_access_key_age
+    resource_type: iam_user
     service: iam
     severity: MEDIUM
     enabled: true
@@ -33,6 +45,9 @@ checks:
     max_age_days: 90
      
   iam_admin_privileges:
+    module: scanners.iam_scanner
+    function: check_admin_privileges
+    resource_type: iam_user
     service: iam
     severity: CRITICAL
     enabled: true
@@ -41,6 +56,9 @@ checks:
     excluded_users: []  # Can add service accounts
   
   ec2_security_group_ports:
+    module: scanners.ec2_scanner
+    function: check_security_groups
+    resource_type: none
     service: ec2
     severity: CRITICAL
     enabled: true
@@ -50,6 +68,9 @@ checks:
     excluded_groups: []
 
   cloudtrail_logging:
+    module: scanners.cloudtrail_scanner
+    function: check_cloudtrail
+    resource_type: none
     service: cloudtrail
     severity: CRITICAL
     enabled: true
