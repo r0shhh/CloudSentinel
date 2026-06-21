@@ -21,7 +21,7 @@ class ReportGenerator:
             self.findings.append({
                 'check': check_name,
                 'severity': severity,
-                'resource': result.get('bucket') or result.get('user') or result.get('group_id') or result.get('trail_name'),
+                'resource': result.get('bucket') or result.get('user') or result.get('group_id') or result.get('trail_name') or result.get('db_name'),
                 'issues': result['issues']
             })    
 

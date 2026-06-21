@@ -77,4 +77,13 @@ checks:
     description: "CloudTrail not configured or not logging"
     remediation: "Enable CloudTrail logging for all regions"
   
+  rds_public_access:
+    module: scanners.rds_scanner
+    function: check_rds_public_access
+    resource_type: none
+    service: rds
+    severity: CRITICAL
+    enabled: true
+    description: "RDS instance publicly accessible"
+    remediation: "Disable public accesibility on RDS instances"
      
