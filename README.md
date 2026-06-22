@@ -28,6 +28,11 @@ Supports filtering by service (`--service`) and severity (`--severity`).
 - IAM user
 - Python 3.8+
 - AWS CLI
+#### IAM policies needed:
+- AmazonS3ReadOnlyAccess
+- IAMReadOnlyAccess
+- AmazonEC2ReadOnlyAccess
+- AWSCloudTrail_ReadOnlyAccess
 
 #### IAM policies needed:
 - AmazonS3ReadOnlyAccess
