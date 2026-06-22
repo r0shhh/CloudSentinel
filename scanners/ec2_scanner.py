@@ -1,9 +1,11 @@
 import boto3
 from botocore.exceptions import ClientError
 
-DANGEROUS_PORTS = [22, 3389, 3306, 5432]
 
-def check_security_groups():
+def check_security_groups(dangerous_ports=None):
+    if dangerous_ports is None:
+        dangerous_ports = [22, 3389, 3306, 5432]
+
     ec2_client = boto3.client('ec2')
 
     try:
@@ -15,7 +17,7 @@ def check_security_groups():
             issues=[]
             for rule in sg['IpPermissions']:
                 port = rule.get('FromPort')
-                if port in DANGEROUS_PORTS:
+                if port in dangerous_ports:
                     for ip_range in rule.get('IpRanges', []):
                         if ip_range['CidrIp'] == '0.0.0.0/0':
                             issues.append(f"Port {port} open to 0.0.0.0/0 (IPv4)")

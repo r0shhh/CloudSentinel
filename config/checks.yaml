@@ -65,7 +65,6 @@ checks:
     description: "Dangerous ports open to 0.0.0.0/0"
     remediation: "Restrict access to specific IPs/security groups"
     dangerous_ports: [22, 3389, 3306, 5432]
-    excluded_groups: []
 
   cloudtrail_logging:
     module: scanners.cloudtrail_scanner
