@@ -23,7 +23,7 @@ def check_user_mfa(username):
     try:
         iam_client.get_login_profile(UserName=username)
     except ClientError as e:
-        if e.response['Error']['Code'] == 'NoSuchEntityException':
+        if e.response['Error']['Code'] == 'NoSuchEntity':
             return {
                 'user': username,
                 'status': 'PASS',
