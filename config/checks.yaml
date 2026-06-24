@@ -12,18 +12,6 @@ checks:
     remediation: "Enable all Block Public Access settings"
   
 
-  s3_bucket_encryption:
-    module: scanners.s3_scanner
-    function: check_bucket_encryption
-    resource_type: s3_bucket
-    service: s3
-    severity: MEDIUM
-    cis_control: "N/A"
-    enabled: true
-    description: "Bucket encryption not configured"
-    remediation: "Enable default encryption with KMS keys"
-  
-
   iam_user_mfa:
     module: scanners.iam_scanner
     function: check_user_mfa

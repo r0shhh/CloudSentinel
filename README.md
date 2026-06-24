@@ -54,39 +54,37 @@ python3 main.py --severity CRITICAL  # only CRITICAL findings
 
 | Check | Service | Severity |
 |---|---|---|
-| Block Public Access disabled | S3 | CRITICAL |
-| Bucket encryption not configured | S3 | MEDIUM |
-| MFA not enabled for console users | IAM | HIGH |
+| Block Public Access disabled | S3 | HIGH |
+| MFA not enabled for console users | IAM | MEDIUM |
 | Access key older than 90 days | IAM | MEDIUM |
-| User has admin privileges | IAM | CRITICAL |
-| Port 22/3389/3306/5432 open to 0.0.0.0/0 | EC2 | CRITICAL |
-| CloudTrail not configured or not logging | CloudTrail | CRITICAL|
-| Database publicly accessible | RDS | CRITICAL
+| User has admin privileges | IAM | HIGH |
+| Port 22/3389/3306/5432 open to 0.0.0.0/0 | EC2 | HIGH |
+| CloudTrail not configured or not logging | CloudTrail | HIGH |
+| Database publicly accessible | RDS | CRITICAL |
 ## Sample Output
 ```
 Scanning 1 bucket(s)... 
 
 [s3_block_public_access] cloudsentinel-test-bucket-rosh
-[s3_bucket_encryption] cloudsentinel-test-bucket-rosh
 Found 1 user(s)...
 
 ==================================================
 CLOUDSENTINEL SCAN REPORT
 ==================================================
-Scan Time : 2026-06-23T01:00:52.980199
+Scan Time : 2026-06-24T17:02:57.386663
 Total Findings: 1
 
 Severity Breakdown:
- CRITICAL: 1
- HIGH: 0
+ CRITICAL: 0
+ HIGH: 1
  MEDIUM: 0
  LOW: 0
 
 Findings:
 --------------------------------------------------
-[CRITICAL] cloudtrail_logging
+[HIGH] cloudtrail_logging (CIS 3.1)
 Resource : No trails found
-! No CloudTrail trails configured - AWS activity is not being logged
+!No CloudTrail trails configured - AWS activity is not being logged
 
 ==================================================
 
