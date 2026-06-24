@@ -49,7 +49,7 @@ def run_checks(report, checks_config, service_filter='all', severity_filter='all
                 name = bucket['Name']
                 print(f"[{check_name}] {name}")
                 result = func(name)
-                report.add_finding(check_name, result, severity)
+                report.add_finding(check_name, result, severity, check.get('cis_control', 'N/A'))
 
         elif resource_type == 'iam_user':
             if users is None:
@@ -57,18 +57,18 @@ def run_checks(report, checks_config, service_filter='all', severity_filter='all
                 print(f"Found {len(users)} user(s)...")
             for user in users:
                 result = func(user['UserName'])
-                report.add_finding(check_name, result, severity)
+                report.add_finding(check_name, result, severity, check.get('cis_control', 'N/A'))
             
         elif resource_type == 'none':
-            metadata_keys = ['module', 'function', 'resource_type', 'service', 'severity', 'enabled', 'description', 'remediation']
+            metadata_keys = ['module', 'function', 'resource_type', 'service', 'severity', 'cis_control', 'enabled', 'description', 'remediation']
             extra_params = {k: v for k, v in check.items() if k not in metadata_keys}
 
             results = func(**extra_params)
             if isinstance(results, list):
                 for result in results:
-                    report.add_finding(check_name, result, severity)
+                    report.add_finding(check_name, result, severity, check.get('cis_control', 'N/A'))
             else:
-                report.add_finding(check_name, results, severity)
+                report.add_finding(check_name, results, severity, check.get('cis_control', 'N/A'))
 
 if __name__ == "__main__":
     import argparse

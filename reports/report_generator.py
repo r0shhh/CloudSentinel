@@ -1,26 +1,17 @@
 from datetime import datetime
 
-"""
-SEVERITY = {
-    'check_public_access_block': 'CRITICAL',
-    'check_bucket_encryption': 'MEDIUM',
-    'check_user_mfa': 'HIGH',
-    'check_access_key_age': 'MEDIUM',
-    'check_admin_privileges': 'CRITICAL',
-    'check_security_groups': 'CRITICAL',
-    'check_cloudtrail': 'CRITICAL',
-}
-"""
+
 class ReportGenerator:
     def __init__(self):
         self.findings = []
         self.scan_time = datetime.now().isoformat()
 
-    def add_finding(self, check_name, result, severity):
+    def add_finding(self, check_name, result, severity, cis_control='N/A'):
         if result['status'] == 'FAIL':
             self.findings.append({
                 'check': check_name,
                 'severity': severity,
+                'cis_control': cis_control,
                 'resource': result.get('bucket') or result.get('user') or result.get('group_id') or result.get('trail_name') or result.get('db_name'),
                 'issues': result['issues']
             })    
@@ -58,10 +49,10 @@ class ReportGenerator:
             print("Findings:")
             print("-"*50)
             for finding in self.findings:
-                print(f"[{finding['severity']}] {finding['check']}") 
+                print(f"[{finding['severity']}] {finding['check']} (CIS {finding['cis_control']})") 
                 print(f"Resource : {finding['resource']}")
                 for issue in finding['issues']:
-                    print(f"! {issue}")
+                    print(f"!{issue}" )
                 print()
         
         else: 

@@ -5,7 +5,8 @@ checks:
     function: check_public_access_block
     resource_type: s3_bucket
     service: s3
-    severity: CRITICAL
+    severity: HIGH
+    cis_control: "2.1.4"
     enabled: true
     description: "Block Public Access disabled on S3 bucket"
     remediation: "Enable all Block Public Access settings"
@@ -17,6 +18,7 @@ checks:
     resource_type: s3_bucket
     service: s3
     severity: MEDIUM
+    cis_control: "N/A"
     enabled: true
     description: "Bucket encryption not configured"
     remediation: "Enable default encryption with KMS keys"
@@ -27,7 +29,8 @@ checks:
     function: check_user_mfa
     resource_type: iam_user
     service: iam
-    severity: HIGH
+    severity: MEDIUM
+    cis_control: "1.9"
     enabled: true
     description: "MFA not enabled for console users"
     remediation: "Enable MFA for all console users"
@@ -39,6 +42,7 @@ checks:
     resource_type: iam_user
     service: iam
     severity: MEDIUM
+    cis_control: "1.13"
     enabled: true
     description: "Access key older than threshold"
     remediation: "Rotate access keys regularly"
@@ -49,7 +53,8 @@ checks:
     function: check_admin_privileges
     resource_type: iam_user
     service: iam
-    severity: CRITICAL
+    severity: HIGH
+    cis_control: "1.15"
     enabled: true
     description: "User has administrator privileges"
     remediation: "Apply principle of least privilege"
@@ -60,7 +65,8 @@ checks:
     function: check_security_groups
     resource_type: none
     service: ec2
-    severity: CRITICAL
+    severity: HIGH
+    cis_control: ["5.3", "5.4"]
     enabled: true
     description: "Dangerous ports open to 0.0.0.0/0"
     remediation: "Restrict access to specific IPs/security groups"
@@ -71,7 +77,8 @@ checks:
     function: check_cloudtrail
     resource_type: none
     service: cloudtrail
-    severity: CRITICAL
+    severity: HIGH
+    cis_control: "3.1"
     enabled: true
     description: "CloudTrail not configured or not logging"
     remediation: "Enable CloudTrail logging for all regions"
@@ -82,6 +89,7 @@ checks:
     resource_type: none
     service: rds
     severity: CRITICAL
+    cis_control: "2.2.3"
     enabled: true
     description: "RDS instance publicly accessible"
     remediation: "Disable public accesibility on RDS instances"
