@@ -90,3 +90,43 @@ def test_check_access_key_age_fail():
         result = check_access_key_age('test-user')
 
     assert result['status'] == 'FAIL'
+
+
+
+@mock_aws
+def test_check_admin_privileges_no_policy():
+    iam_client = boto3.client('iam', region_name='us-east-1')
+    iam_client.create_user(UserName='test-user')
+ 
+
+    result = check_admin_privileges('test-user')
+
+    assert result['status'] == 'PASS'
+
+
+@mock_aws(config={"iam": {"load_aws_managed_policies": True}})
+def test_check_admin_privileges_non_admin_policy():
+    iam_client = boto3.client('iam', region_name='us-east-1')
+    iam_client.create_user(UserName='test-user')
+    iam_client.attach_user_policy(
+        UserName='test-user',
+        PolicyArn='arn:aws:iam::aws:policy/ReadOnlyAccess'
+    )
+
+    result = check_admin_privileges('test-user')
+
+    assert result['status'] == 'PASS'
+
+
+@mock_aws(config={"iam": {"load_aws_managed_policies": True}})
+def test_check_admin_privileges_admin_policy():
+    iam_client = boto3.client('iam', region_name='us-east-1')
+    iam_client.create_user(UserName='test-user')
+    iam_client.attach_user_policy(
+        UserName='test-user',
+        PolicyArn='arn:aws:iam::aws:policy/AdministratorAccess'
+    )
+
+    result = check_admin_privileges('test-user')
+
+    assert result['status'] == 'FAIL'

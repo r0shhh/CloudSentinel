@@ -117,18 +117,18 @@ def check_admin_privileges(username):
         for policy in policies:
             if policy['PolicyArn'] == 'arn:aws:iam::aws:policy/AdministratorAccess':
                 issues.append('User has Admin Privileges')
-            if issues: 
-                return {
-                    'user' : username,
-                    'status' : 'FAIL',
-                    'issues' : issues
-                }
-            else:
-                return {
-                    'user' : username,
-                    'status' : 'PASS',
-                    'issues' : []
-                }
+        if issues: 
+            return {
+                'user' : username,
+                'status' : 'FAIL',
+                'issues' : issues
+            }
+        else:
+            return {
+                'user' : username,
+                'status' : 'PASS',
+                'issues' : []
+            }
     except ClientError as e:
         error_code = e.response['Error']['Code']
         return {
