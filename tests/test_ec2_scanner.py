@@ -39,4 +39,26 @@ def test_check_security_groups_open_ssh():
     
 
 
-  
+@mock_aws
+def test_check_security_groups_restricted_ip():
+    ec2_client = boto3.client('ec2', region_name='us-east-1')
+    sg = ec2_client.create_security_group(GroupName='test-sg-restricted', Description='test')
+
+    ec2_client.authorize_security_group_ingress(
+        GroupId=sg['GroupId'],
+        IpPermissions=[
+            {
+                'IpProtocol': 'tcp',
+
+                'FromPort': 22,
+
+                'ToPort': 22,
+
+                'IpRanges': [{'CidrIp': '203.0.113.50/32'}]
+            }
+        ]
+    )
+
+    results = check_security_groups(dangerous_ports=[22, 3389, 3306, 5432])
+
+    assert all(r['status'] == 'PASS' for r in results)
