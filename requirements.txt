@@ -11,7 +11,9 @@ docutils==0.19
 idna==3.18
 iniconfig==2.3.0
 jmespath==1.1.0
+markdown-it-py==4.2.0
 MarkupSafe==3.0.3
+mdurl==0.1.2
 moto==5.2.2
 packaging==26.2
 pluggy==1.6.0
@@ -23,6 +25,7 @@ python-dateutil==2.9.0.post0
 PyYAML==6.0.3
 requests==2.34.2
 responses==0.26.1
+rich==15.0.0
 rsa==4.7.2
 s3transfer==0.17.0
 six==1.17.0
