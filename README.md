@@ -24,16 +24,12 @@ CloudSentinel follows a modular, decoupled architecture:
 ![alt text](image.png)
 
 ## Tech Stack
-- Python 3
-- boto3 (AWS SDK for Python)
-- AWS Free Tier
-
-## Prerequisites
 - **Core:** Python 3 
 - **Cloud SDK:** `boto3`
 - **Testing:** `pytest`, `moto`
 - **UI/UX:** `rich`
 
+## Prerequisites
 #### IAM policies needed:
 - AmazonS3ReadOnlyAccess
 - IAMReadOnlyAccess
