@@ -1,6 +1,6 @@
 # CloudSentinel
 
-A high-performance, modular AWS security auditing tool designed to detect misconfigurations in real-time.
+A modular, Python-based AWS security auditing tool designed to detect misconfigurations.
 
 ## Why CloudSentinel?
 In modern cloud environments, infrastructure grows faster than security policies. CloudSentinel solves the "audit gap" - the time between an infrastructure misconfiguration (like an open S3 bucket) and detection. It provides a lightweight, config-driven approach that allows security teams to deploy custom checks in minutes without modifying the core engine.
@@ -9,7 +9,7 @@ In modern cloud environments, infrastructure grows faster than security policies
 - **Config-Driven Architecture:** Leveraged `importlib` for dynamic plugin loading, enabling a "write-once, scan-anywhere" workflow for new security checks.
 - **Granular CLI Control:** Implemented flexible filtering via CLI flags (`--service`, `--severity`), allowing users to perform targeted audits and reduce noise in large environments.
 - **Robust Mock-Testing:** Implemented comprehensive unit testing using `pytest` and `moto` to simulate complex AWS environments without risking live production data.
-- **Next-Gen CLI Experience:** Refactored the reporting layer using the `Rich` library to provide real-time progress tracking and a clean, color-coded executive summary.
+- **Improved CLI Reporting**: Refactored the reporting layer using the Rich library to provide real-time progress tracking, color-coded severity breakdowns, and tabular summary output
 - **Compliance-First Design:** Integrated industry-standard CIS benchmark mapping directly into the reporting engine, providing immediate context and actionable remediation guidance for all findings.
 
 ## Architecture
@@ -24,16 +24,12 @@ CloudSentinel follows a modular, decoupled architecture:
 ![alt text](image.png)
 
 ## Tech Stack
-- Python 3
-- boto3 (AWS SDK for Python)
-- AWS Free Tier
-
-## Prerequisites
 - **Core:** Python 3 
 - **Cloud SDK:** `boto3`
 - **Testing:** `pytest`, `moto`
 - **UI/UX:** `rich`
 
+## Prerequisites
 #### IAM policies needed:
 - AmazonS3ReadOnlyAccess
 - IAMReadOnlyAccess
