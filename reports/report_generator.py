@@ -17,7 +17,7 @@ class ReportGenerator:
                 'check': check_name,
                 'severity': severity,
                 'cis_control': cis_control,
-                'resource': result.get('bucket') or result.get('user') or result.get('group_id') or result.get('trail_name') or result.get('db_name'),
+                'resource': result.get('bucket') or result.get('user') or result.get('group_id') or result.get('trail_name') or result.get('db_name') or result.get('volume_id'),
                 'issues': result['issues']
             })    
 
