@@ -40,13 +40,13 @@ def check_public_access_block(bucket_name):
 
         if issues:
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'FAIL',
                 'issues': issues
             }                
         else:
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'PASS',
                 'issues' : []
             }
@@ -55,13 +55,13 @@ def check_public_access_block(bucket_name):
 
         if error_code == 'NoSuchPublicAccessBlockConfiguration':
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'FAIL',
                 'issues': ['No Block Public Access configuration found']
             }
         else:
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'Error',
                 'issues': [f'Unexpected error: {error_code}']
             }
@@ -71,13 +71,13 @@ def check_public_access_block(bucket_name):
 
         if error_code == 'ServerSideEncryptionConfigurationNotFoundError':
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'FAIL',
                 'issues': ['Bucket encryption is not configured']
             }
         else:
             return {
-                'bucket': bucket_name,
+                'resource_id': bucket_name,
                 'status': 'ERROR',
                 'issues': [f'Unexpected error: {error_code}']
             }

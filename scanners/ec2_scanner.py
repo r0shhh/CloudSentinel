@@ -26,7 +26,7 @@ def check_security_groups(dangerous_ports=None):
                             issues.append(f"Port {port} open to ::/0 (IPv6)")
 
             results.append({
-                'group_id': sg['GroupId'],
+                'resource_id': sg['GroupId'],
                 'group_name': sg['GroupName'],
                 'status': 'FAIL' if issues else 'PASS',
                 'issues': issues
@@ -36,5 +36,5 @@ def check_security_groups(dangerous_ports=None):
     
     except ClientError as e:
         error_code = e.response['Error']['Code']
-        return [{'group_id': 'unknown', 'group_name': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]
+        return [{'resource_id': 'unknown', 'group_name': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]
     

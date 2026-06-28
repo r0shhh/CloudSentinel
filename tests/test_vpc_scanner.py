@@ -16,7 +16,7 @@ def test_check_vpc_flow_logs_disabled():
 
     results = check_vpc_flow_logs()
 
-    target_result = next((r for r in results if r['vpc_id'] == vpc_id), None)
+    target_result = next((r for r in results if r['resource_id'] == vpc_id), None)
     assert target_result is not None
     assert target_result['status'] == 'FAIL'
 
@@ -42,6 +42,6 @@ def test_check_vpc_flow_logs_enabled():
 
     results = check_vpc_flow_logs()
 
-    target_result = next((r for r in results if r['vpc_id'] == vpc_id), None)
+    target_result = next((r for r in results if r['resource_id'] == vpc_id), None)
     assert target_result is not None
     assert target_result['status'] == 'PASS'

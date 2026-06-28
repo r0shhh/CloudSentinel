@@ -11,7 +11,7 @@ def check_cloudtrail():
 
         if not trails:
             return [{
-            'trail_name': 'No trails found',
+            'resource_id': 'No trails found',
             'status': 'FAIL',
             'issues': ['No CloudTrail trails configured - AWS activity is not being logged']
         }]     
@@ -27,7 +27,7 @@ def check_cloudtrail():
                 issues.append("CloudTrail is not multi-region")
 
             results.append({
-                'trail_name': trail['Name'],
+                'resource_id': trail['Name'],
                 'status': 'FAIL' if issues else 'PASS',
                 'issues': issues
              })
@@ -35,4 +35,4 @@ def check_cloudtrail():
         return results
     except ClientError as e:
         error_code = e.response['Error']['Code']
-        return [{'trail_name': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]    
+        return [{'resource_id': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]    
