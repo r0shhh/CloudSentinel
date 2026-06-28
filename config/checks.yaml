@@ -82,3 +82,14 @@ checks:
     description: "RDS instance publicly accessible"
     remediation: "Disable public accesibility on RDS instances"
      
+
+  ebs_encryption:
+    module: scanners.ebs_scanner
+    function: check_ebs_encryption
+    resource_type: none
+    service: ec2
+    severity: MEDIUM
+    cis_control: "5.1.1"
+    enabled: true
+    description: "EBS volume is not encrypted"
+    remediation: "Enable encryption for all EBS volumes"
