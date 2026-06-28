@@ -81,4 +81,14 @@ checks:
     enabled: true
     description: "RDS instance publicly accessible"
     remediation: "Disable public accesibility on RDS instances"
-     
+
+  vpc_flow_logs:
+    module: scanners.vpc_scanner
+    function: check_vpc_flow_logs
+    resource_type: none
+    service: vpc
+    severity: MEDIUM
+    cis_control: "3.7"
+    enabled: true
+    description: "VPC Flow Logs not enabled for all VPCs"
+    remediation: "Enable VPC Flow Logs for all VPCs"
