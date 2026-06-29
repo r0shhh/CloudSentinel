@@ -20,7 +20,7 @@ def check_ebs_encryption():
                 issues.append('EBS Volume is not encrypted')
 
             results.append({
-                'volume_id': volume['VolumeId'],
+                'resource_id': volume['VolumeId'],
                 'status': 'FAIL' if issues else 'PASS',
                 'issues': issues
             })
@@ -30,7 +30,7 @@ def check_ebs_encryption():
     except ClientError as e:
         error_code = e.response['Error']['Code']
         return [{
-            'volume_id': 'unknown',
+            'resource_id': 'unknown',
             'status': 'ERROR',
             'issues': [f'Unexpected error: {error_code}']
         }]

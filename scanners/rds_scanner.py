@@ -23,7 +23,7 @@ def check_rds_public_access():
                 issues.append('Database is Publicly Accessible')
 
             results.append ({
-                'db_name' : instance['DBInstanceIdentifier'],
+                'resource_id' : instance['DBInstanceIdentifier'],
                 'status' : 'FAIL' if issues else 'PASS',
                 'issues' : issues
             }) 
@@ -31,4 +31,4 @@ def check_rds_public_access():
         return results
     except ClientError as e:
         error_code = e.response['Error']['Code']
-        return [{'db_name': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]
+        return [{'resource_id': 'unknown', 'status': 'ERROR', 'issues': [f'Unexpected error: {error_code}']}]

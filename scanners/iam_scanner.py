@@ -25,13 +25,13 @@ def check_user_mfa(username):
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchEntity':
             return {
-                'user': username,
+                'resource_id': username,
                 'status': 'PASS',
                 'issues': [],
             }
         else:
             return {
-                'user': username,
+                'resource_id': username,
                 'status': 'ERROR',
                 'issues': [f'Unexpected error checking login profile']
             }
@@ -42,13 +42,13 @@ def check_user_mfa(username):
 
         if not mfa_devices:
             return{
-                'user': username,
+                'resource_id': username,
                 'status': 'FAIL',
                 'issues': ['MFA is not enabled for this user']
             }
         else:
             return {
-                'user': username,
+                'resource_id': username,
                 'status': 'PASS',
                 'issues': []        
 
@@ -57,7 +57,7 @@ def check_user_mfa(username):
     except ClientError as e:
         error_code = e.response['Error']['Code']
         return {
-            'user': username,
+            'resource_id': username,
             'status': 'ERROR',
             'issues': [f'Unexpected error: {error_code}']
         }
@@ -85,20 +85,20 @@ def check_access_key_age(username):
 
         if issues: 
             return {
-                'user' : username,
+                'resource_id' : username,
                 'status' : 'FAIL',
                 'issues' : issues
             }        
         else: 
             return {
-                'user' : username,
+                'resource_id' : username,
                 'status' : 'PASS',
                 'issues' : []
             }
     except ClientError as e:
         error_code = e.response['Error']['Code']
         return {
-            'user' : username,
+            'resource_id' : username,
             'status' : 'ERROR',
             'issues' : [f'Unexpected error: {error_code}']
         }
@@ -119,20 +119,20 @@ def check_admin_privileges(username):
                 issues.append('User has Admin Privileges')
         if issues: 
             return {
-                'user' : username,
+                'resource_id' : username,
                 'status' : 'FAIL',
                 'issues' : issues
             }
         else:
             return {
-                'user' : username,
+                'resource_id' : username,
                 'status' : 'PASS',
                 'issues' : []
             }
     except ClientError as e:
         error_code = e.response['Error']['Code']
         return {
-            'user' : username,
+            'resource_id' : username,
             'status' : 'ERROR',
             'issues' : [f"Unexpected error: {error_code}"]
 
