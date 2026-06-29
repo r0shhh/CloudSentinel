@@ -63,7 +63,7 @@ python3 main.py --severity CRITICAL  # only CRITICAL findings
 
 
 ## Project Status
-- [x] **Core Engine:** Core scanner functional accross S3, IAM, EC2, CloudTrail, RDS, VPC and EBS.
+- [x] **Core Engine:** Core scanner functional across S3, IAM, EC2, CloudTrail, RDS, VPC and EBS.
 - [x] **Extensibility:** Successfully implemented a config-driven architecture.
 - [x] **Reporting:** Automated JSON exports and a polished, real-time interactive terminal UI.
 - [x] **Testing:** Unit testing implemented to ensure security check reliability.
