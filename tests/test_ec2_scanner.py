@@ -1,5 +1,3 @@
-import os
-os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 import boto3
 from moto import mock_aws
 from scanners.ec2_scanner import check_security_groups
