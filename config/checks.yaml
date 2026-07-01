@@ -103,3 +103,14 @@ checks:
     enabled: true
     description: "EBS volume is not encrypted"
     remediation: "Enable encryption for all EBS volumes"
+  
+  iam_root_access_key:
+    module: scanners.iam_scanner
+    function: check_root_access_key
+    resource_type: none
+    service: iam
+    severity: HIGH
+    cis_control: "IAM.4"
+    enabled: true
+    description: "Root user has an active access key"
+    remediation: "Remove all root user access keys"

@@ -2,8 +2,12 @@ import boto3
 from moto import mock_aws
 from unittest.mock import patch
 from datetime import datetime, timedelta, timezone
-from scanners.iam_scanner import check_user_mfa, check_access_key_age, check_admin_privileges
-
+from scanners.iam_scanner import (
+    check_user_mfa,
+    check_access_key_age,
+    check_admin_privileges,
+    check_root_access_key,
+)
 
 @mock_aws
 def test_check_user_mfa_no_console_access():
@@ -130,3 +134,6 @@ def test_check_admin_privileges_admin_policy():
     result = check_admin_privileges('test-user')
 
     assert result['status'] == 'FAIL'
+    
+    
+    
