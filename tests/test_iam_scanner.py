@@ -137,3 +137,24 @@ def test_check_admin_privileges_admin_policy():
     
     
     
+def test_check_root_access_key_pass():
+    fake_report = (
+        "user,arn,user_creation_time,password_enabled,password_last_used,password_last_changed,"
+        "password_next_rotation,mfa_active,access_key_1_active,access_key_1_last_rotated,"
+        "access_key_1_last_used_date,access_key_1_last_used_region,access_key_1_last_used_service,"
+        "access_key_2_active,access_key_2_last_rotated,access_key_2_last_used_date,"
+        "access_key_2_last_used_region,access_key_2_last_used_service,cert_1_active,"
+        "cert_1_last_rotated,cert_2_active,cert_2_last_rotated\n"
+        "<root_account>,arn:aws:iam::123456789012:root,,,,,,true,false,,,,,false,,,,,false,,false,"
+    )
+
+    with patch("boto3.client") as mock_client:
+        mock_client.return_value.generate_credential_report.return_value = {}
+
+        mock_client.return_value.get_credential_report.return_value = {
+            "Content": fake_report.encode("utf-8")
+        }
+
+        result = check_root_access_key()
+
+    assert result["status"] == "PASS"
