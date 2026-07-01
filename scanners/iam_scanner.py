@@ -137,4 +137,48 @@ def check_admin_privileges(username):
             'issues' : [f"Unexpected error: {error_code}"]
 
         }            
+def check_root_access_key():
+    """
+    Check whether the AWS account root user has an active access key.
+    """
+    iam_client = boto3.client("iam")
 
+    try:
+        iam_client.generate_credential_report()
+        response = iam_client.get_credential_report()
+
+        content = response["Content"].decode("utf-8")
+        lines = content.splitlines()
+
+        for line in lines:
+            if line.startswith("<root_account>"):
+                fields = line.split(",")
+
+                access_key_1 = fields[8]
+                access_key_2 = fields[13]
+
+                if access_key_1 == "true" or access_key_2 == "true":
+                    return {
+                        "resource_id": "<root_account>",
+                        "status": "FAIL",
+                        "issues": ["Root user has an active access key"],
+                    }
+
+                return {
+                    "resource_id": "<root_account>",
+                    "status": "PASS",
+                    "issues": [],
+                }
+
+        return {
+            "resource_id": "<root_account>",
+            "status": "ERROR",
+            "issues": ["Root account not found in credential report"],
+        }
+
+    except ClientError as e:
+        return {
+            "resource_id": "<root_account>",
+            "status": "ERROR",
+            "issues": [f"Unexpected error: {e.response['Error']['Code']}"],
+        }
